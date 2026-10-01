@@ -1,41 +1,43 @@
 # AI Prompt Log
 
-## Prompt 1 — Project Planning
+These prompts were used during the architecture and planning of the Ticket QR Code Generator Worker.
 
-I need to create a Ticket QR Code Generator Worker based on the given requirements. This sprint is architecture-only, so no feature code should be written yet.
+## Prompt 1 — Requirements Analysis
 
-Help me identify the main entities, database requirements, validation rules, error states, loading states, accessibility requirements, security requirements, and telemetry requirements.
+I have reviewed the client requirements for the Ticket QR Code Generator Worker. Before starting implementation, I want to make sure the requirements are converted into clear technical requirements.
 
-## Prompt 2 — Database and ERD
+Help me identify the main data entities, relationships, validation requirements, unhappy paths, accessibility requirements, security considerations, and telemetry requirements that should be reflected in the architecture.
 
-Create a simple database schema for the Ticket QR Code Generator Worker.
+Do not suggest feature implementation yet.
 
-The main entities should be User, Ticket, and QR Code. Define their fields, primary keys, foreign keys, unique fields, and relationships.
+## Prompt 2 — Database Design
 
-Also create a Mermaid ERD that I can add to my documentation.
+I have identified User, Ticket, and QR Code as the main entities for the system.
 
-## Prompt 3 — API Design
+Help me review this structure and determine the appropriate fields, primary keys, foreign keys, unique constraints, and relationships. I also want the QR code to reference the ticket without exposing unnecessary customer information.
 
-Create API contracts for the planned Ticket QR Code Generator Worker.
+Once the structure is finalized, help me represent it as a Mermaid ERD.
 
-Include endpoints for creating, viewing, updating, and deleting tickets, along with QR code generation.
+## Prompt 3 — API Contract Review
 
-Include request formats, success responses, validation errors, and common HTTP status codes.
+The database structure is now defined. I want to plan the API before implementation.
 
-Do not write implementation code.
+Help me define the required endpoints for ticket creation, retrieval, updating, deletion, and QR code generation. For each endpoint, define the expected request, success response, validation errors, and relevant HTTP status codes.
 
-## Prompt 4 — Testing Plan
+Keep this as an API contract only; no backend implementation.
 
-Create a TDD test plan for the project using Vitest.
+## Prompt 4 — Unhappy Paths and TDD
 
-Cover valid inputs, invalid inputs, empty states, loading states, network failures, duplicate data, XSS protection, accessibility, and telemetry.
+The assignment requires the application to handle invalid input, empty results, loading states, and unreliable internet connections.
 
-The tests should be planned before feature implementation.
+Help me turn these requirements into a test plan using Vitest. Include tests for validation, duplicate records, failed network requests, XSS sanitization, accessibility, and the required analytics message.
 
-## Prompt 5 — Final Review
+The tests should be planned before implementation so the project can follow a TDD workflow.
 
-Review the architecture against the original requirements.
+## Prompt 5 — Architecture Review
 
-Check the database design, API contracts, validation, error handling, accessibility, security, unreliable internet handling, and testing requirements.
+I have completed the initial database schema, ERD, API contracts, and test plan.
 
-Keep this sprint architecture-only and identify anything that is missing.
+Review these planned components against the original assignment requirements and point out any gaps or inconsistencies. Focus on requirements that could cause problems during the future implementation, especially validation, security, accessibility, error handling, and unreliable connectivity.
+
+This sprint is still architecture-only, so recommend documentation changes rather than feature code.
