@@ -6,11 +6,9 @@
 /api
 ```
 
-All API responses use a consistent JSON structure.
+All endpoints use JSON unless otherwise specified.
 
----
-
-## Standard Response Structure
+## Standard Response Format
 
 ### Success
 
@@ -37,39 +35,13 @@ All API responses use a consistent JSON structure.
 
 ---
 
-# 1. Get Tickets
+## 1. Get All Tickets
 
-## `GET /api/tickets`
+### `GET /api/tickets`
 
-Returns the available tickets.
+Returns all available tickets.
 
-### Success — Tickets Found
-
-**Status:** `200 OK`
-
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "id": "uuid",
-      "ticketNumber": "TKT-1001",
-      "customerName": "Demo Customer",
-      "status": "active",
-      "createdBy": "user-uuid",
-      "createdAt": "2026-10-01T10:00:00Z",
-      "updatedAt": "2026-10-01T10:00:00Z"
-    }
-  ],
-  "meta": {
-    "total": 1
-  }
-}
-```
-
-### Success — Empty
-
-**Status:** `200 OK`
+**Success — 200 OK**
 
 ```json
 {
@@ -81,17 +53,13 @@ Returns the available tickets.
 }
 ```
 
-The frontend must display a user-friendly empty state such as:
+If no tickets exist, the API returns an empty array rather than an error. The frontend must display:
 
 ```text
 No data found.
 ```
 
-A blank screen must never be used for an empty collection.
-
-### Server Error
-
-**Status:** `500 Internal Server Error`
+**Server Error — 500**
 
 ```json
 {
@@ -106,15 +74,13 @@ A blank screen must never be used for an empty collection.
 
 ---
 
-# 2. Get Single Ticket
+## 2. Get Ticket
 
-## `GET /api/tickets/:id`
+### `GET /api/tickets/:id`
 
-Returns a single ticket.
+Returns one ticket.
 
-### Success
-
-**Status:** `200 OK`
+**Success — 200 OK**
 
 ```json
 {
@@ -131,9 +97,7 @@ Returns a single ticket.
 }
 ```
 
-### Ticket Not Found
-
-**Status:** `404 Not Found`
+**Not Found — 404**
 
 ```json
 {
@@ -148,11 +112,11 @@ Returns a single ticket.
 
 ---
 
-# 3. Create Ticket
+## 3. Create Ticket
 
-## `POST /api/tickets`
+### `POST /api/tickets`
 
-Creates a new ticket.
+Creates a ticket.
 
 ### Request
 
@@ -163,9 +127,7 @@ Creates a new ticket.
 }
 ```
 
-### Success
-
-**Status:** `201 Created`
+**Success — 201 Created**
 
 ```json
 {
@@ -182,9 +144,7 @@ Creates a new ticket.
 }
 ```
 
-### Invalid Input
-
-**Status:** `400 Bad Request`
+**Invalid Input — 400**
 
 ```json
 {
@@ -200,17 +160,9 @@ Creates a new ticket.
 }
 ```
 
-The frontend must:
+The frontend must prevent submission and highlight offending fields.
 
-* prevent submission
-* identify invalid fields
-* display validation errors
-* visually highlight invalid fields
-* keep the interface usable with keyboard navigation
-
-### Duplicate Ticket Number
-
-**Status:** `409 Conflict`
+**Duplicate Ticket — 409**
 
 ```json
 {
@@ -227,19 +179,15 @@ The frontend must:
 
 ---
 
-# 4. Generate QR Code
+## 4. Generate QR Code
 
-## `POST /api/tickets/:id/qr`
+### `POST /api/tickets/:id/qr`
 
 Generates a QR code for an existing ticket.
 
-### Request
-
 No request body is required.
 
-### Success
-
-**Status:** `201 Created`
+**Success — 201 Created**
 
 ```json
 {
@@ -255,9 +203,7 @@ No request body is required.
 }
 ```
 
-### Ticket Not Found
-
-**Status:** `404 Not Found`
+**Ticket Not Found — 404**
 
 ```json
 {
@@ -270,9 +216,7 @@ No request body is required.
 }
 ```
 
-### QR Already Exists
-
-**Status:** `409 Conflict`
+**QR Already Exists — 409**
 
 ```json
 {
@@ -287,11 +231,11 @@ No request body is required.
 
 ---
 
-# 5. Update Ticket
+## 5. Update Ticket
 
-## `PATCH /api/tickets/:id`
+### `PATCH /api/tickets/:id`
 
-Updates allowed ticket information.
+Updates allowed ticket fields.
 
 ### Request
 
@@ -302,91 +246,37 @@ Updates allowed ticket information.
 }
 ```
 
-### Success
+**Success — 200 OK**
 
-**Status:** `200 OK`
+Returns the updated ticket.
 
-```json
-{
-  "success": true,
-  "data": {
-    "id": "uuid",
-    "ticketNumber": "TKT-1001",
-    "customerName": "Updated Customer",
-    "status": "completed",
-    "createdBy": "user-uuid",
-    "createdAt": "2026-10-01T10:00:00Z",
-    "updatedAt": "2026-10-01T11:00:00Z"
-  }
-}
-```
+**Invalid Input — 400**
 
-### Invalid Input
+Returns `VALIDATION_ERROR` with field-level errors.
 
-**Status:** `400 Bad Request`
+**Not Found — 404**
 
-```json
-{
-  "success": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Invalid ticket data.",
-    "fields": {
-      "status": "Invalid ticket status."
-    }
-  }
-}
-```
-
-### Ticket Not Found
-
-**Status:** `404 Not Found`
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "TICKET_NOT_FOUND",
-    "message": "Ticket not found.",
-    "fields": {}
-  }
-}
-```
+Returns `TICKET_NOT_FOUND`.
 
 ---
 
-# 6. Delete Ticket
+## 6. Delete Ticket
 
-## `DELETE /api/tickets/:id`
+### `DELETE /api/tickets/:id`
 
 Deletes a ticket and its associated QR-code record according to the application's deletion policy.
 
-### Success
+**Success — 204 No Content**
 
-**Status:** `204 No Content`
+**Not Found — 404**
 
-No response body is required.
-
-### Ticket Not Found
-
-**Status:** `404 Not Found`
-
-```json
-{
-  "success": false,
-  "error": {
-    "code": "TICKET_NOT_FOUND",
-    "message": "Ticket not found.",
-    "fields": {}
-  }
-}
-```
+Returns `TICKET_NOT_FOUND`.
 
 ---
 
 # Validation Rules
 
-## Ticket Number
+### Ticket Number
 
 * Required
 * Must not be empty
@@ -394,14 +284,14 @@ No response body is required.
 * Must be unique
 * Must not contain unsafe executable content
 
-## Customer Name
+### Customer Name
 
 * Required
 * Must not be empty
-* Must satisfy the maximum length defined by the database schema
-* Must be sanitized before being stored in application state
+* Must respect the database maximum length
+* Must be sanitized against XSS before being stored in application state
 
-## Ticket Status
+### Ticket Status
 
 Allowed values:
 
@@ -411,120 +301,107 @@ completed
 cancelled
 ```
 
-Unknown status values must be rejected.
+Unknown values must be rejected.
 
 ---
 
-# Frontend Request States
+# Asynchronous Operation States
 
-Every asynchronous API operation must expose an appropriate UI state.
+The frontend must provide:
 
-## Loading
+### Loading
 
 ```text
 Loading...
 ```
 
-A visible loading indicator must be displayed while waiting for the operation.
+A visible loading indicator must be shown during asynchronous operations.
 
-## Success
-
-The resulting data should be displayed immediately after the operation succeeds.
-
-## Empty
-
-For an empty list:
+### Empty
 
 ```text
 No data found.
 ```
 
-## Error
-
-For a failed request:
+### Error
 
 ```text
 Unable to load data. Please try again.
 ```
 
-The interface must remain usable rather than crashing.
+A retry action should be available for recoverable failures.
 
 ---
 
-# Bad Connectivity
+# Connectivity Requirements
 
-The application must assume that users may have slow or unreliable connectivity.
+The frontend must remain usable on slow or unreliable connections.
 
-The frontend should:
+It must:
 
-* display loading indicators during asynchronous operations
+* show loading indicators
 * prevent accidental duplicate submissions where appropriate
-* handle request failures gracefully
-* preserve already available UI/data when possible
-* provide a retry action after recoverable failures
-* never display an uncaught application error or blank screen
+* handle failed requests gracefully
+* preserve available UI/data where possible
+* provide retry functionality
+* avoid uncaught errors and blank screens
 
 ---
 
-# Security
+# Security Requirements
 
-Text inputs must be sanitized against XSS before being stored in application state.
+* Sanitize text input against XSS.
+* Validate data on the backend as well as the frontend.
+* Do not place sensitive personal information inside QR payloads.
+* Do not hardcode API keys or credentials.
+* Do not commit real PII.
 
-The backend must also validate incoming data rather than trusting frontend validation.
+The QR payload should contain a non-sensitive ticket reference such as:
 
-The QR payload must contain a non-sensitive ticket reference rather than unnecessary personal information.
-
-No API keys, credentials, or sensitive configuration values may be hardcoded.
-
----
-
-# Accessibility
-
-The eventual frontend implementation must target a 100% Lighthouse accessibility score.
-
-Requirements include:
-
-* semantic HTML
-* keyboard-accessible interactive elements
-* appropriate labels for inputs
-* appropriate ARIA labels where required
-* visible validation feedback
-* accessible loading and error states
-* sufficient text/background contrast
-* logical focus order
+```text
+TKT-1001
+```
 
 ---
 
-# Telemetry Simulation
+# Accessibility Requirements
 
-After a primary successful user action, the application must log:
+The future implementation must target:
+
+**100% Lighthouse Accessibility**
+
+Requirements:
+
+* Semantic HTML
+* Keyboard navigation
+* Proper form labels
+* Appropriate ARIA labels
+* Accessible loading states
+* Accessible error states
+* Visible validation feedback
+* Logical focus order
+* Sufficient contrast
+
+---
+
+# Telemetry
+
+After a primary action completes successfully, log:
 
 ```text
 [Analytics] User interacted with Ticket QR Code Generator Worker
 ```
 
-The telemetry is simulated locally and must not expose sensitive user information.
+The simulated telemetry must not expose sensitive information.
 
 ---
 
-# API Error Codes
+# Error Codes
 
-| Code                | Meaning                         |
-| ------------------- | ------------------------------- |
-| `VALIDATION_ERROR`  | Request contains invalid data   |
-| `TICKET_NOT_FOUND`  | Requested ticket does not exist |
-| `DUPLICATE_TICKET`  | Ticket number already exists    |
-| `QR_ALREADY_EXISTS` | Ticket already has a QR code    |
-| `SERVER_ERROR`      | Unexpected server-side failure  |
-
----
-
-# Design Principles
-
-* Consistent JSON response structures
-* Explicit HTTP status codes
-* Predictable validation errors
-* User-friendly empty and error states
-* Resilient behavior under unreliable connectivity
-* No sensitive information in QR payloads
-* API contracts remain implementation-independent
+| Code                | HTTP Status | Meaning                      |
+| ------------------- | ----------: | ---------------------------- |
+| `VALIDATION_ERROR`  |         400 | Invalid request data         |
+| `TICKET_NOT_FOUND`  |         404 | Ticket does not exist        |
+| `DUPLICATE_TICKET`  |         409 | Ticket number already exists |
+| `QR_ALREADY_EXISTS` |         409 | Ticket already has a QR code |
+| `SERVER_ERROR`      |         500 | Unexpected server error      |

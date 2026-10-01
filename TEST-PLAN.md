@@ -1,3 +1,9 @@
+## Testing Strategy
+
+The implementation will use Vitest for automated testing.
+
+Tests will be created before feature implementation according to the TDD workflow. The initial test suite will cover API contracts, validation, empty states, loading states, error handling, security, accessibility requirements, and telemetry behavior.
+
 # Test Plan — Ticket QR Code Generator Worker
 
 ## Purpose

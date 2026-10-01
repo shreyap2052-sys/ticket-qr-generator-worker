@@ -1,6 +1,39 @@
 # Database Schema — Ticket QR Code Generator Worker
 
-## Entities
+## Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    USER ||--o{ TICKET : creates
+    TICKET ||--|| QR_CODE : has
+
+    USER {
+        UUID id PK
+        VARCHAR_100 name
+        VARCHAR_255 email UK
+        VARCHAR_50 role
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+    }
+
+    TICKET {
+        UUID id PK
+        VARCHAR_50 ticketNumber UK
+        VARCHAR_100 customerName
+        VARCHAR_30 status
+        UUID createdBy FK
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+    }
+
+    QR_CODE {
+        UUID id PK
+        UUID ticketId FK
+        TEXT qrValue
+        VARCHAR_30 status
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+    }```
 
 ### User
 
